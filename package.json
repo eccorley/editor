@@ -1,8 +1,7 @@
 {
-  "name": "electron-react-boilerplate",
-  "productName": "ElectronReact",
-  "version": "0.7.0",
-  "description": "Electron application boilerplate based on React, React Router, Webpack, React Hot Loader for rapid application development",
+  "name": "editor",
+  "version": "0.0.0",
+  "description": "editor",
   "main": "main.js",
   "scripts": {
     "test": "better-npm-run test",
@@ -56,27 +55,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chentsulin/electron-react-boilerplate.git"
+    "url": "git+https://github.com/eccorley/editor.git"
   },
   "author": {
-    "name": "C. T. Lin",
-    "email": "chentsulin@gmail.com",
-    "url": "https://github.com/chentsulin"
+    "name": "Evan Corley",
+    "email": "eccorley@gmail.com",
+    "url": "https://github.com/eccorley"
   },
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/chentsulin/electron-react-boilerplate/issues"
-  },
-  "keywords": [
-    "electron",
-    "boilerplate",
-    "react",
-    "react-router",
-    "flux",
-    "webpack",
-    "react-hot"
-  ],
-  "homepage": "https://github.com/chentsulin/electron-react-boilerplate#readme",
+  "license": "MIT",,
+  "keywords": [],
+  "homepage": "https://github.com/eccorley/editor#readme",
   "devDependencies": {
     "asar": "^0.8.0",
     "babel": "^5.8.23",
