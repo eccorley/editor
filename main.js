@@ -1,15 +1,20 @@
 /* eslint strict: 0 */
 'use strict';
 
+var fs = require('fs');
 const electron = require('electron');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const Menu = electron.Menu;
 const crashReporter = electron.crashReporter;
 const shell = electron.shell;
+const dialog = electron.dialog;
+const ipcMain = electron.ipcMain;
 let menu;
 let template;
 let mainWindow = null;
+let openFile = null;
+let fileContent = null;
 
 
 crashReporter.start();
@@ -23,9 +28,19 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
 });
 
+ipcMain.on('save-file', (event, fileName) => {
+  openFile = fileName
+})
+
+ipcMain.on('send-content', (event, content) => {
+  const message = JSON.parse(content);
+  openFile = message.fileName ? message.fileName : openFile;
+  fileContent = message.content;
+})
 
 app.on('ready', () => {
   mainWindow = new BrowserWindow({ width: 1024, height: 728 });
+  let webContents = mainWindow.webContents;
 
   if (process.env.HOT) {
     mainWindow.loadURL(`file://${__dirname}/app/hot-dev-app.html`);
@@ -43,9 +58,9 @@ app.on('ready', () => {
 
   if (process.platform === 'darwin') {
     template = [{
-      label: 'Electron',
+      label: 'Writor',
       submenu: [{
-        label: 'About ElectronReact',
+        label: 'About Writor',
         selector: 'orderFrontStandardAboutPanel:'
       }, {
         type: 'separator'
@@ -55,7 +70,7 @@ app.on('ready', () => {
       }, {
         type: 'separator'
       }, {
-        label: 'Hide ElectronReact',
+        label: 'Hide Writor',
         accelerator: 'Command+H',
         selector: 'hide:'
       }, {
@@ -74,7 +89,51 @@ app.on('ready', () => {
           app.quit();
         }
       }]
-    }, {
+    },
+    {
+      label: 'File',
+      submenu: [{
+        label: 'New File',
+        accelerator: 'Command+N',
+        selector: 'new:'
+      }, {
+        label: 'Open File',
+        accelerator: 'Command+O',
+        selector: 'open:',
+        click() {
+          dialog.showOpenDialog((fileNames) => {
+            if (fileNames === undefined) return;
+            var fileName = fileNames[0];
+            fs.readFile(fileName, 'utf-8', (err, data) => {
+              webContents.send('open-file', data)
+              openFile = fileName;
+            })
+          })
+        }
+      }, {
+        type: 'separator'
+      }, {
+        label: 'Save File',
+        accelerator: 'Command+S',
+        selector: 'save:',
+        click() {
+          if (openFile) {
+            fs.writeFile(openFile, fileContent, (err) => {
+              if (err) throw "error";
+            })
+          } else {
+            dialog.showSaveDialog((fileName) => {
+              if (fileName === undefined) return;
+              fs.writeFile(fileName, fileContent, (err) => {
+                if (err) throw "error";
+                openFile = fileName;
+              })
+            })
+          }
+        }
+      },]
+    },
+    {
       label: 'Edit',
       submenu: [{
         label: 'Undo',

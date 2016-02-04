@@ -9,7 +9,13 @@ module.exports = {
       test: /\.jsx?$/,
       loaders: ['babel-loader'],
       exclude: /node_modules/
-    }]
+    },
+    {
+      test: /\.scss$/,
+      loaders: ['style-loader', 'css-loader', 'sass-loader?sourceMap'],
+      include: path.join(__dirname, 'app/sass')
+    }
+  ]
   },
   output: {
     path: path.join(__dirname, 'dist'),

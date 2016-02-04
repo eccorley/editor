@@ -1,8 +1,9 @@
 import { combineReducers } from 'redux';
-import counter from './counter';
+import editor from './editor';
+
 
 const rootReducer = combineReducers({
-  counter
+  editor
 });
 
 export default rootReducer;
